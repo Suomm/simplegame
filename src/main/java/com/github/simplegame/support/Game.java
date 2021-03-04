@@ -154,14 +154,4 @@ public final class Game implements Context {
         return fish.isEmpty() && !turtle.isDied();
     }
 
-    /**
-     * 如果乌龟体力耗尽，并且还有活着的鱼，那么游戏就失败了。
-     *
-     * @return {@code true} 游戏失败，{@code false} 游戏胜利
-     */
-    @Override
-    public boolean defeat() {
-        return turtle.isDied() && !fish.isEmpty();
-    }
-
 }
