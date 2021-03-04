@@ -42,13 +42,4 @@ public interface Context {
         return false;
     }
 
-    /**
-     * 判断玩家是否失败。
-     *
-     * @return {@code true} 游戏失败，{@code false} 游戏胜利
-     */
-    default boolean defeat() {
-        return false;
-    }
-
 }
