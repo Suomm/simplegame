@@ -50,10 +50,9 @@ import java.util.Scanner;
  * <h2>步长操作：</h2>
  *
  * <ul>
- * <li>&le;0：结束游戏
  * <li>1：移动一步
  * <li>2：移动两步
- * <li>&gt;2：重新输入
+ * <li>&le;0或&gt;2：重新输入
  * </ul>
  *
  * @author 王帅
