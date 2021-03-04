@@ -107,10 +107,8 @@ public class Application {
         // 游戏终止之后的用户提示
         if (game.victory()) {
             System.out.println("恭喜您通过了这个难度的游戏！");
-        } else if (game.defeat()) {
-            System.out.println("您的乌龟累死了！游戏结束！");
         } else {
-            System.out.println("没有胆量玩了？退出游戏！");
+            System.out.println("您的乌龟累死了！游戏结束！");
         }
     }
 
