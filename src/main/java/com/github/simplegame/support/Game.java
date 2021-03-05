@@ -83,6 +83,7 @@ public final class Game implements Context {
      * @exception InvalidStepException 如果步长无效，则抛出此异常
      */
     public void chase(Direction direction, int step) throws InvalidStepException {
+        // 检查步长是否符合要求
         check(step);
         // 乌龟向指定方向进行移动
         turtle.move(direction, step);
@@ -124,7 +125,7 @@ public final class Game implements Context {
     private static void check(int step) {
         // 步长小于零的提示信息
         if (step <= 0) {
-            throw new InvalidStepException("步数怎么可能是个负数？");
+            throw new InvalidStepException("咱好好走几步行不？");
         }
         // 步长大于二的提示信息
         if (step > 2) {
