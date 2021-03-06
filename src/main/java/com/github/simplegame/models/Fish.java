@@ -19,6 +19,7 @@ package com.github.simplegame.models;
 import com.github.simplegame.support.Direction;
 import com.github.simplegame.support.Panel;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 鱼类。
@@ -29,12 +30,14 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Fish extends Animal {
 
+    private static final long serialVersionUID = -8083222909847628720L;
+
     /**
      * 在面板上随机生成一条鱼。
      *
      * @param panel 面板
      */
-    public Fish(Panel panel) {
+    public Fish(@NotNull Panel panel) {
         super(panel);
     }
 
