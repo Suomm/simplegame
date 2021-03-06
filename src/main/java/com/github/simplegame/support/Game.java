@@ -20,6 +20,7 @@ import com.github.simplegame.exception.InvalidStepException;
 import com.github.simplegame.models.Fish;
 import com.github.simplegame.models.Turtle;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,8 +33,9 @@ import java.util.List;
  * <ul>
  * <li>在游戏面板上会随机生成一只乌龟和多条鱼。
  * <li>乌龟可以随意向指定方向移动，鱼的移动方向是随机的。
- * <li>乌龟的最大移动能力为两步（可以选择移动的步长），鱼每次只能移动一步，当它们移动到面板边缘时自动向反方向移动。
  * <li>乌龟有初始化体力（初始化体力即为体力上限），并且每移动一步，消耗一体力。
+ * <li>乌龟的最大移动能力为两步（可以选择移动的步长），鱼每次只能移动一步，
+ *     当它们移动到面板边缘时不会再向这个方向继续移动（但乌龟仍然会消耗体力）。
  * <li>当乌龟和鱼的坐标重叠，乌龟吃掉鱼，乌龟体力增加二十但不超过体力上限，鱼暂不计算体力。
  * <li>当乌龟体力值为零或者鱼的数量为零时游戏结束。
  * </ul>
@@ -54,7 +56,9 @@ import java.util.List;
  * @since 1.0
  * @see GameFactory
  */
-public final class Game implements Context {
+public final class Game implements Context, Serializable {
+
+    private static final long serialVersionUID = -8191925463702955611L;
 
     /**
      * 面板上所有的鱼。
@@ -82,19 +86,29 @@ public final class Game implements Context {
      * @param step 步长
      * @exception InvalidStepException 如果步长无效，则抛出此异常
      */
-    public void chase(Direction direction, int step) throws InvalidStepException {
+    public void chase(Direction direction, int step) {
         // 检查步长是否符合要求
         check(step);
         // 乌龟向指定方向进行移动
         turtle.move(direction, step);
-        // 输出乌龟的位置和体力
-        System.out.println(turtle);
         // 清理会被乌龟吃掉的鱼
         clear();
         // 所有活着的鱼继续随机移动
         fish.forEach(Fish::move);
         // 清理移动到乌龟嘴里去的鱼
         clear();
+        // 输出乌龟和所有鱼的位置
+        observe();
+    }
+
+    /**
+     * 输出面板上乌龟和鱼的位置。玩家需要观察他们的位置关系，移动乌龟吃掉鱼。
+     *
+     * @since 1.1
+     */
+    public void observe() {
+        // 输出乌龟的位置和体力
+        System.out.println(turtle);
         // 输出所有活着的鱼的位置
         fish.forEach(System.out::println);
     }
@@ -112,7 +126,7 @@ public final class Game implements Context {
                 // 乌龟的体力加二十
                 turtle.increase(20);
                 // 提示玩家乌龟吃掉了鱼
-                System.out.println("乌龟吃掉了鱼：" + e);
+                System.err.println("乌龟吃掉了鱼：" + e);
             }
         }
     }
@@ -121,8 +135,9 @@ public final class Game implements Context {
      * 检查步长是否满足要求。
      *
      * @param step 步长
+     * @throws InvalidStepException 如果步长无效，则抛出此异常
      */
-    private static void check(int step) {
+    private static void check(int step) throws InvalidStepException {
         // 步长小于零的提示信息
         if (step <= 0) {
             throw new InvalidStepException("咱好好走几步行不？");
