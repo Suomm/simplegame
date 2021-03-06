@@ -19,6 +19,7 @@ package com.github.simplegame.models;
 import com.github.simplegame.support.Direction;
 import com.github.simplegame.support.Panel;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 乌龟类。
@@ -28,6 +29,8 @@ import lombok.ToString;
  */
 @ToString(callSuper = true, exclude = "limit")
 public class Turtle extends Animal {
+
+    private static final long serialVersionUID = -3138174332833796098L;
 
     /** 乌龟的体力上限 */
     private final int limit;
@@ -40,7 +43,7 @@ public class Turtle extends Animal {
      * @param energy 体力
      * @param panel 面板
      */
-    public Turtle(int energy, Panel panel) {
+    public Turtle(int energy, @NotNull Panel panel) {
         super(panel);
         this.limit  = energy;
         this.energy = energy;
@@ -91,7 +94,7 @@ public class Turtle extends Animal {
      * @param direction 移动方向
      * @param step 步长
      */
-    public void move(Direction direction, int step) {
+    public void move(@NotNull Direction direction, int step) {
         this.energy -= step;
         // 乌龟体力为一，步长为二，此时乌龟只能走一步。
         if (this.energy < 0) {
