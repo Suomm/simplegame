@@ -44,7 +44,7 @@ java -jar simplegame-1.1-SNAPSHOT.jar
 
 * 1：移动一步
 * 2：移动两步
-* &le;0 或 &gt;2：重新输入
+* &le;0 或 &gt;2：重新移动
 
 > 退出游戏
 
