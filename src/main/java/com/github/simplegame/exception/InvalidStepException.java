@@ -16,12 +16,15 @@
 
 package com.github.simplegame.exception;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * <p>
  * 无效的步长异常。这是一个检查时异常，当用户输入的步长不满足要求时，抛出该异常。
  *
  * @author 王帅
  * @since 1.0
+ * @see com.github.simplegame.support.Movable
  */
 public class InvalidStepException extends RuntimeException {
 
@@ -32,6 +35,7 @@ public class InvalidStepException extends RuntimeException {
      *
      * @param message 详细消息
      */
+    @Contract(pure = true)
     public InvalidStepException(String message) {
         super(message);
     }
