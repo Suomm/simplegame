@@ -16,8 +16,8 @@
 
 package com.github.simplegame.support;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Random;
