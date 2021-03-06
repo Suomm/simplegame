@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -31,7 +32,9 @@ import java.util.UUID;
 @Data
 @ToString(exclude = "id")
 @EqualsAndHashCode(of = "id")
-public class Panel {
+public class Panel implements Serializable {
+
+    private static final long serialVersionUID = 80243521929158788L;
 
     /**
      * 面板的唯一标志，用于判断两个面板是否相同。
