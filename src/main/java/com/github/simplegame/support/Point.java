@@ -16,8 +16,10 @@
 
 package com.github.simplegame.support;
 
+import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -31,7 +33,9 @@ import java.util.Random;
  * @since 1.0
  */
 @Data
-public final class Point {
+public final class Point implements Serializable {
+
+    private static final long serialVersionUID = -4534726639866139445L;
 
     /** 横坐标（x轴） */
     private int x;
@@ -43,7 +47,7 @@ public final class Point {
      *
      * @param panel 面板
      */
-    public Point(Panel panel) {
+    public Point(@NotNull Panel panel) {
         Random random = new Random();
         this.x = random.nextInt(panel.getWidth() + 1);
         this.y = random.nextInt(panel.getHeight() + 1);
