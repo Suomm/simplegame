@@ -16,14 +16,11 @@
 
 package com.github.simplegame;
 
-import com.github.simplegame.exception.InvalidDirectionException;
-import com.github.simplegame.exception.InvalidStepException;
+import com.github.simplegame.exception.InputInvalidException;
 import com.github.simplegame.support.Direction;
 import com.github.simplegame.support.Game;
 import com.github.simplegame.support.GameFactory;
 import com.github.simplegame.utils.SerialUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -38,17 +35,19 @@ import java.util.Scanner;
  * <li>0：简单难度的游戏
  * <li>1：中等难度的游戏
  * <li>2：困难难度的游戏
- * <li>3：继续上次退出时的游戏进度
+ * <li>3：自定义游戏难度
+ * <li>4：继续上次退出时的游戏进度
+ * <li>其他数字：重新选择游戏难度
  * </ul>
  *
  * <h2>方向操作：</h2>
  *
  * <ul>
- * <li>0：向上移动
- * <li>1：向下移动
- * <li>2：向左移动
- * <li>3：向右移动
- * <li>&lt;0 或 &gt;3：重新输入
+ * <li>1：向上移动
+ * <li>2：向下移动
+ * <li>3：向左移动
+ * <li>4：向右移动
+ * <li>其他数字：重新输入
  * </ul>
  *
  * <h2>步长操作：</h2>
@@ -56,7 +55,7 @@ import java.util.Scanner;
  * <ul>
  * <li>1：移动一步
  * <li>2：移动两步
- * <li>&le;0或&gt;2：重新输入
+ * <li>其他数字：重新移动
  * </ul>
  *
  * @author 王帅
@@ -67,12 +66,13 @@ public class Application {
     private Application() {
     }
 
-    private static final String RECORD_FILE_NAME = "record.txt";
+    /** 保存游戏记录的文件名 */
+    public static final String RECORD_FILE_NAME = "record.txt";
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         // 创建不同难度等级的游戏
-        Game game = createNewGame(sc);
+        Game game = createGame(sc);
         // 游戏创建失败，关闭 Scanner 结束游戏
         if (game == null) {
             sc.close();
@@ -83,20 +83,12 @@ public class Application {
             game.observe();
             // 开始这个难度等级的游戏
             while (!game.finished()) {
-                System.out.println("请输入乌龟的移动方向：");
-                Direction direction;
                 try {
-                    direction = Direction.of(sc.nextInt());
-                } catch (InvalidDirectionException e) {
-                    System.out.println(e.getMessage());
-                    continue;
-                }
-                System.out.println("请输入乌龟的移动步数：");
-                int step = sc.nextInt();
-                try {
-                    // 进行乌龟的随机移动追逐
-                    game.chase(direction, step);
-                } catch (InvalidStepException e) {
+                    System.out.print("请输入乌龟的移动方向：");
+                    Direction direction = Direction.of(sc.nextInt());
+                    System.out.print("请输入乌龟的移动步数：");
+                    game.chase(direction, sc.nextInt());
+                } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -107,7 +99,7 @@ public class Application {
                 System.out.println("您的乌龟累死了！游戏结束！");
             }
         } catch (InputMismatchException e) {
-            System.out.println("不想玩了？没关系，下次可以继续！");
+            System.out.println("不想玩了也没关系，下次可以继续！");
             SerialUtils.writeObject(RECORD_FILE_NAME, game);
         } finally {
             sc.close();
@@ -119,11 +111,11 @@ public class Application {
      *
      * @since 1.1
      */
-    @Nullable
-    private static Game createNewGame(@NotNull Scanner sc) {
+    private static Game createGame(Scanner sc) {
         try {
+            Game game;
             for (;;) {
-                System.out.println("请选择游戏难度：");
+                System.out.print("请选择游戏难度：");
                 switch (sc.nextInt()) {
                     case 0:
                         return GameFactory.simple();
@@ -132,7 +124,13 @@ public class Application {
                     case 2:
                         return GameFactory.difficult();
                     case 3:
-                        Game game = SerialUtils.readObject(RECORD_FILE_NAME);
+                        game = defineGame(sc);
+                        if (game == null) {
+                            continue;
+                        }
+                        return game;
+                    case 4:
+                        game = SerialUtils.readObject(RECORD_FILE_NAME);
                         if (game == null) {
                             System.out.println("没有找到游戏存档啊！");
                             continue;
@@ -144,10 +142,49 @@ public class Application {
                 }
             }
         } catch (InputMismatchException e) {
-            System.out.println(e.getMessage());
-            System.out.println("不要乱来啊，游戏结束！");
+            System.out.println("无法识别的难度，游戏结束！");
         }
         return null;
+    }
+
+    /**
+     * 自定义游戏。
+     *
+     * @since 1.2
+     */
+    private static Game defineGame(Scanner sc) {
+        try {
+            System.out.print("请输入面板的宽度：");
+            int width = sc.nextInt();
+            check(width, "面板宽度必须大于0！");
+            System.out.print("请输入面板的高度：");
+            int height = sc.nextInt();
+            check(height, "面板高度必须大于0！");
+            System.out.print("请输入乌龟的体力：");
+            int energy = sc.nextInt();
+            check(energy, "乌龟的体力必须大于0！");
+            System.out.print("请输入鱼的数量：");
+            int amount = sc.nextInt();
+            check(amount, "鱼的数量必须大于0");
+            return GameFactory.create(width, height, energy, amount);
+        } catch (InputMismatchException e) {
+            System.out.println("退出自定义游戏！");
+        } catch (InputInvalidException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * 检查输入的数值是否大于零。如果输入的数值不大于零的话，
+     * 会用指定的消息构造{@link InputInvalidException}
+     * 异常并抛出。
+     *
+     * @since 1.2
+     */
+    private static void check(int num, String msg) {
+        if (num <= 0)
+            throw new InputInvalidException(msg);
     }
 
 }
