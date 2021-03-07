@@ -17,7 +17,6 @@
 package com.github.simplegame.support;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -46,8 +45,9 @@ public final class Point implements Serializable {
      * 在面板上随机生成一个位置。
      *
      * @param panel 面板
+     * @throws NullPointerException 如果面板对象为空
      */
-    public Point(@NotNull Panel panel) {
+    public Point(Panel panel) {
         Random random = new Random();
         this.x = random.nextInt(panel.getWidth() + 1);
         this.y = random.nextInt(panel.getHeight() + 1);
