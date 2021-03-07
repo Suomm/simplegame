@@ -55,7 +55,7 @@ public abstract class Animal implements Movable, Serializable {
      * <p>
      * 在面板上向指定方向随机移动指定步长。
      *
-     * <h2>特别注意：<h2>
+     * <h2>特别注意：</h2>
      *
      * <ul>
      * <li>假设物体距离边界还有一步，指定步长为二，则物体会走一步到边界之后不会再移动。
