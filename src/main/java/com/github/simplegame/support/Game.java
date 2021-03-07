@@ -37,6 +37,8 @@ import java.util.List;
  * <li>乌龟的最大移动能力为两步（可以选择移动的步长），鱼每次只能移动一步，
  *     当它们移动到面板边缘时不会再向这个方向继续移动（但乌龟仍然会消耗体力）。
  * <li>当乌龟和鱼的坐标重叠，乌龟吃掉鱼，乌龟体力增加二十但不超过体力上限，鱼暂不计算体力。
+ * <li>在乌龟行进过程中如果碰到鱼的话，乌龟会将这条鱼吃掉，并增加自身体力值（但不会超过体力上限），
+ *     继续走剩下的步数时仍然要消耗体力值。
  * <li>当乌龟体力值为零或者鱼的数量为零时游戏结束。
  * </ul>
  *
@@ -84,13 +86,16 @@ public final class Game implements Context, Serializable {
      *
      * @param direction 移动方向
      * @param step 步长
-     * @exception InvalidStepException 如果步长无效，则抛出此异常
      */
     public void chase(Direction direction, int step) {
-        // 检查步长是否符合要求
+        // 检查步长是否正确
         check(step);
         // 乌龟向指定方向进行移动
-        turtle.move(direction, step);
+        // 每次只走一步，并判断是否可以吃掉鱼
+        for (int i = 0; i < step; i++) {
+            turtle.move(direction);
+            clear();
+        }
         // 清理会被乌龟吃掉的鱼
         clear();
         // 所有活着的鱼继续随机移动
@@ -140,7 +145,7 @@ public final class Game implements Context, Serializable {
     private static void check(int step) throws InvalidStepException {
         // 步长小于零的提示信息
         if (step <= 0) {
-            throw new InvalidStepException("咱好好走几步行不？");
+            throw new InvalidStepException("步数应该大于零的啊！");
         }
         // 步长大于二的提示信息
         if (step > 2) {
