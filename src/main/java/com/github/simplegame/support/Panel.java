@@ -16,12 +16,10 @@
 
 package com.github.simplegame.support;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * 游戏面板。
@@ -29,18 +27,11 @@ import java.util.UUID;
  * @author 王帅
  * @since 1.0
  */
-@Data
-@ToString(exclude = "id")
-@EqualsAndHashCode(of = "id")
+@Getter
+@ToString
 public class Panel implements Serializable {
 
-    private static final long serialVersionUID = 80243521929158788L;
-
-    /**
-     * 面板的唯一标志，用于判断两个面板是否相同。
-     * 乌龟和鱼必须要在同一个面板上才能进行游戏。
-     */
-    private final String id;
+    private static final long serialVersionUID = 6243520539987531865L;
 
     /** 面板宽度（x轴） */
     private final int width;
@@ -54,9 +45,12 @@ public class Panel implements Serializable {
      * @param height 高度
      */
     public Panel(int width, int height) {
-        this.width = width;
+        if (width <= 0)
+            throw new IllegalArgumentException("面板宽度不能小于零！");
+        if (height <= 0)
+            throw new IllegalArgumentException("面板高度不能小于零！");
+        this.width  = width;
         this.height = height;
-        this.id = UUID.randomUUID().toString();
     }
 
 }
