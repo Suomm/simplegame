@@ -19,7 +19,6 @@ package com.github.simplegame.models;
 import com.github.simplegame.support.Direction;
 import com.github.simplegame.support.Panel;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 乌龟类。
@@ -38,15 +37,18 @@ public class Turtle extends Animal {
     private int energy;
 
     /**
-     * 在面板上随机生成一只乌龟，并指定乌龟的体力。
+     * <p>在面板上随机生成一只乌龟，并指定乌龟的体力。
+     * <b>如果设置的体力值为负数时，默认会将体力值设置为零。</b>
      *
      * @param energy 体力
      * @param panel 面板
+     * @throws NullPointerException 如果面板对象为空
      */
-    public Turtle(int energy, @NotNull Panel panel) {
+    public Turtle(int energy, Panel panel) {
         super(panel);
-        this.limit  = energy;
-        this.energy = energy;
+        // 不能出现体力为复数的情况
+        this.energy = Math.max(energy, 0);
+        this.limit  = this.energy;
     }
 
     /**
@@ -94,14 +96,29 @@ public class Turtle extends Animal {
      * @param direction 移动方向
      * @param step 步长
      */
-    public void move(@NotNull Direction direction, int step) {
-        this.energy -= step;
-        // 乌龟体力为一，步长为二，此时乌龟只能走一步。
-        if (this.energy < 0) {
-            step = step + energy;
-            this.energy = 0;
+    public void move(Direction direction, int step) {
+        if (this.energy > 0) {
+            // 步长大于乌龟的体力
+            // 此时乌龟所能走的最大步长即为自己的体力
+            if (this.energy < step) {
+                step = energy;
+            }
+            super.move(direction, step);
+            this.energy -= step;
         }
-        super.move(direction, step);
+    }
+
+    /**
+     * 乌龟在面板上向指定方向移动一步，并消耗一点体力。
+     *
+     * @param direction 移动方向
+     * @since 1.2
+     */
+    public void move(Direction direction) {
+        if (this.energy > 0) {
+            super.move(direction, 1);
+            this.energy--;
+        }
     }
 
 }
