@@ -21,7 +21,6 @@ import com.github.simplegame.support.Movable;
 import com.github.simplegame.support.Panel;
 import com.github.simplegame.support.Point;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
@@ -45,9 +44,9 @@ public abstract class Animal implements Movable, Serializable {
      * 指定面板并在面板上生成一个随机位置。
      *
      * @param panel 面板
+     * @throws NullPointerException 如果面板对象为空
      */
     public Animal(Panel panel) {
-        assert panel != null : "面板不能为空";
         this.panel = panel;
         this.location = new Point(panel);
     }
@@ -56,46 +55,46 @@ public abstract class Animal implements Movable, Serializable {
      * <p>
      * 在面板上向指定方向随机移动指定步长。
      *
-     * <p>
-     * <b>
-     * 注意：假设物体距离边界还有一步，指定步长为二，则物体会走一步到边界之后不会再移动。
-     * </b>
+     * <h2>特别注意：<h2>
+     *
+     * <ul>
+     * <li>假设物体距离边界还有一步，指定步长为二，则物体会走一步到边界之后不会再移动。
+     * <li>如果步长小于零则会向相反的方向移动，但总不会超过边界。
+     * </ul>
      *
      * @param direction 移动方向
      * @param step 步长
      */
-    public void move(@NotNull Direction direction, int step) {
-        int temp;
+    public void move(Direction direction, int step) {
         switch (direction) {
             case UP:
-                temp = location.getY() + step;
-                if (temp > panel.getWidth()) {
-                    temp = panel.getWidth();
-                }
-                location.setY(temp);
+                location.setY(shift(location.getY() + step, panel.getHeight()));
                 break;
             case DOWN:
-                temp = location.getY() - step;
-                if (temp < 0) {
-                    temp = 0;
-                }
-                location.setY(temp);
+                location.setY(shift(location.getY() - step, panel.getHeight()));
                 break;
             case LEFT:
-                temp = location.getX() - step;
-                if (temp < 0) {
-                    temp = 0;
-                }
-                location.setX(temp);
+                location.setX(shift(location.getX() - step, panel.getWidth()));
                 break;
             case RIGHT:
-                temp = location.getX() + step;
-                if (temp > panel.getHeight()) {
-                    temp = panel.getHeight();
-                }
-                location.setX(temp);
+                location.setX(shift(location.getX() + step, panel.getWidth()));
                 break;
         }
+    }
+
+    /**
+     * 设置要判断的值在{@code 0-bound}范围之内。
+     *
+     * @param val 需要判断的值
+     * @param bound 边界
+     * @return 计算后的值
+     * @since 1.2
+     */
+    private int shift(int val, int bound) {
+        if (val > bound) {
+            return bound;
+        }
+        return Math.max(val, 0);
     }
 
 }
