@@ -96,6 +96,10 @@ public final class Game implements Context, Serializable {
             turtle.move(direction);
             clear();
         }
+        // 乌龟累死了，游戏结束
+        if (turtle.isDied()) {
+            return;
+        }
         // 清理会被乌龟吃掉的鱼
         clear();
         // 所有活着的鱼继续随机移动
