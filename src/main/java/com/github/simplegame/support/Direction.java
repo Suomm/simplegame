@@ -17,7 +17,6 @@
 package com.github.simplegame.support;
 
 import com.github.simplegame.exception.InvalidDirectionException;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -46,7 +45,6 @@ public enum Direction {
      *
      * @return 移动方向
      */
-    @NotNull
     public static Direction random() {
         return ENUMS[new Random().nextInt(4)];
     }
@@ -58,22 +56,21 @@ public enum Direction {
      * <p>
      * 每个索引所表示的方向：
      * <ul>
-     * <li>0: 上</li>
-     * <li>1: 下</li>
-     * <li>2: 左</li>
-     * <li>3: 右</li>
+     * <li>1: 上</li>
+     * <li>2: 下</li>
+     * <li>3: 左</li>
+     * <li>4: 右</li>
      * </ul>
      *
      * @param index 索引
      * @return 移动方向
      * @exception InvalidDirectionException 如果方向索引是无效的，则抛出此异常
      */
-    @NotNull
     public static Direction of(int index) {
-        if (index < 0 || index > 3) {
+        if (index < 1 || index > 4) {
             throw new InvalidDirectionException("请输入正确的移动方向！");
         }
-        return ENUMS[index];
+        return ENUMS[index - 1];
     }
 
 }
