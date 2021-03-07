@@ -16,8 +16,6 @@
 
 package com.github.simplegame.utils;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.*;
 
 /**
@@ -35,9 +33,9 @@ public class SerialUtils {
      * 将对象序列化到文件。如果对象为{@code null}则不会被序列化。
      *
      * @param filename 序列化文件名
-     * @param obj 需要序列化对象
+     * @param obj 需要序列化的对象
      */
-    public static void writeObject(String filename, @Nullable Object obj) {
+    public static void writeObject(String filename, Object obj) {
         if (obj != null) {
             try (FileOutputStream fos = new FileOutputStream(filename);
                  ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -55,7 +53,6 @@ public class SerialUtils {
      * @param filename 序列化文件名
      * @return 读取到的对象（可能为{@code null}）
      */
-    @Nullable
     @SuppressWarnings("unchecked")
     public static <T> T readObject(String filename) {
         File file = new File(filename);
