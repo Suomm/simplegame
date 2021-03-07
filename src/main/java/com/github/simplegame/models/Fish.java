@@ -16,10 +16,8 @@
 
 package com.github.simplegame.models;
 
-import com.github.simplegame.support.Direction;
 import com.github.simplegame.support.Panel;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 鱼类。
@@ -36,16 +34,10 @@ public class Fish extends Animal {
      * 在面板上随机生成一条鱼。
      *
      * @param panel 面板
+     * @throws NullPointerException 如果面板对象为空
      */
-    public Fish(@NotNull Panel panel) {
+    public Fish(Panel panel) {
         super(panel);
-    }
-
-    /**
-     * 鱼向面板上任意方向随机移动一步。
-     */
-    public void move() {
-        super.move(Direction.random(), 1);
     }
 
 }
