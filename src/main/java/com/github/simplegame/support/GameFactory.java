@@ -18,8 +18,6 @@ package com.github.simplegame.support;
 
 import com.github.simplegame.models.Fish;
 import com.github.simplegame.models.Turtle;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,8 +45,6 @@ public final class GameFactory {
      *
      * @return 新的游戏
      */
-    @NotNull
-    @Contract(" -> new")
     public static Game simple() {
         return create(10, 10, 100, 10);
     }
@@ -65,8 +61,6 @@ public final class GameFactory {
      *
      * @return 新的游戏
      */
-    @NotNull
-    @Contract(" -> new")
     public static Game medium() {
         return create(20, 20, 200, 20);
     }
@@ -83,8 +77,6 @@ public final class GameFactory {
      *
      * @return 新的游戏
      */
-    @NotNull
-    @Contract(" -> new")
     public static Game difficult() {
         return create(50, 50, 300, 50);
     }
@@ -97,10 +89,9 @@ public final class GameFactory {
      * @param energy 乌龟体力
      * @param amount 鱼的数量
      * @return 新的游戏
+     * @exception IllegalArgumentException 如果面板的宽度或者高度小于零
      */
-    @NotNull
-    @Contract("_,_,_,_ -> new")
-    private static Game create(int width, int height, int energy, int amount) {
+    public static Game create(int width, int height, int energy, int amount) {
         // 创建游戏面板
         Panel panel = new Panel(width, height);
         // 在面板上创建一只乌龟
@@ -108,8 +99,7 @@ public final class GameFactory {
         // 在面板上创建多条鱼
         List<Fish> fish = new LinkedList<>();
         for (int i = 0; i < amount; i++) {
-            Fish e = new Fish(panel);
-            fish.add(e);
+            fish.add(new Fish(panel));
         }
         return new Game(turtle, fish);
     }
