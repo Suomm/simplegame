@@ -16,8 +16,6 @@
 
 package com.github.simplegame.support;
 
-import com.github.simplegame.exception.InvalidStepException;
-
 /**
  * 可移动的模型接口，定义向指定方向移动指定步长的方法。
  *
@@ -31,8 +29,26 @@ public interface Movable {
      *
      * @param direction 方向
      * @param step 步长
-     * @throws InvalidStepException 如果步长无效，抛出此异常
      */
-    void move(Direction direction, int step) throws InvalidStepException;
+    void move(Direction direction, int step);
+
+    /**
+     * 向随机方向移动一步。
+     *
+     * @since 1.2
+     */
+    default void move() {
+        this.move(Direction.random(), 1);
+    }
+
+    /**
+     * 向指定方向移动一步。
+     *
+     * @param direction 移动方向
+     * @since 1.2
+     */
+    default void move(Direction direction) {
+        this.move(direction, 1);
+    }
 
 }
