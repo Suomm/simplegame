@@ -16,8 +16,6 @@
 
 package com.github.simplegame.exception;
 
-import org.jetbrains.annotations.Contract;
-
 /**
  * <p>
  * 无效的方向异常。这是一个检查时异常，当用户输入的方向索引不满足要求时，抛出该异常。
@@ -26,7 +24,7 @@ import org.jetbrains.annotations.Contract;
  * @since 1.1
  * @see com.github.simplegame.support.Direction
  */
-public class InvalidDirectionException extends RuntimeException {
+public class InvalidDirectionException extends IllegalArgumentException {
 
     private static final long serialVersionUID = 306027940919150932L;
 
@@ -35,7 +33,6 @@ public class InvalidDirectionException extends RuntimeException {
      *
      * @param message 详细消息
      */
-    @Contract(pure = true)
     public InvalidDirectionException(String message) {
         super(message);
     }
